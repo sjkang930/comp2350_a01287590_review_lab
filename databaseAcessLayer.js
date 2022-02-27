@@ -2,7 +2,7 @@ const database = include('/databaseConnection');
 
 
 function getAllUsers(callback) {
-	let sqlQuery = "SELECT * FROM epyvfbg6yj8cbpkc.web_user";
+	let sqlQuery = "SELECT * FROM restaurant_review.restaurant";
 	database.query(sqlQuery, (err, results, fields) => {
 		if (err) {
 			callback(err, null);
