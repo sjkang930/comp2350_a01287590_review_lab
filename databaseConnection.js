@@ -13,10 +13,10 @@ const dbConfigHeroku = {
 };
 
 const dbConfigLocal = {
-    host: "eanl4i1omny740jw.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
-	user: "w607giaibrxjx4ze",
-	password: "nc47f2a4pcsri9od",
-	database: "qfa6b4l4ihc0n95m",
+    host: "localhost",
+	user: "root",
+	password: "R751956r",
+	database: "restaurant_review",
 	multipleStatements: false,
 	namedPlaceholders: true 
 };
