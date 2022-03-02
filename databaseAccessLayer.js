@@ -1,8 +1,8 @@
 const database = include('/databaseConnection');
 
 
-function getAllRestaurant(callback) {
-	let sqlQuery = "SELECT * FROM restaurant";
+function getAllRestaurants(callback) {
+	let sqlQuery = "SELECT restaurant_id, name, description FROM restaurant";
 	database.query(sqlQuery, (err, results, fields) => {
 		if (err) {
 			callback(err, null);
@@ -14,9 +14,13 @@ function getAllRestaurant(callback) {
 	});
 }
 
-function getAllreviews(callback) {
-	let sqlQuery = "SELECT * FROM review";
-	database.query(sqlQuery, (err, results, fields) => {
+function deleteRestaurant(restaurant_id, callback) {
+	let sqlDeleteRestaurant = "DELETE FROM restaurant WHERE restaurant_id = :userID";
+	let params = {
+		userID: restaurant_id
+	};
+	console.log(sqlDeleteRestaurant);
+	database.query(sqlDeleteRestaurant, params, (err, results, fields) => {
 		if (err) {
 			callback(err, null);
 		}
@@ -26,9 +30,9 @@ function getAllreviews(callback) {
 		}
 	});
 }
-const passwordPepper = "SeCretPeppa4MySal+";
-function addUser(postData, callback) {
-	let sqlInsertSalt = "INSERT INTO restaurant (name, description)VALUES (:name, :description);"
+
+function addRestaurant(postData, callback) { 
+	let sqlInsertSalt = "INSERT INTO restaurant (name, description) VALUES (:name, :description);"
 	let params = {
 		name: postData.name,
 		description: postData.description
@@ -38,37 +42,17 @@ function addUser(postData, callback) {
 		if (err) {
 			console.log(err);
 			callback(err, null);
-		}
-		else {
-			let insertedID = results.insertId;
-			let updatePasswordHash = "UPDATE restaurant SET password_hash = sha2(concat(:password,:pepper,password_salt),512) WHERE restaurant_id = :name;"
-			let params2 = {
-				password: postData.password,
-				pepper: passwordPepper,
-				userId: insertedID
-			}
-			console.log(updatePasswordHash);
-			database.query(updatePasswordHash, params2, (err, results, fields) => {
-				if (err) {
-					console.log(err);
-					callback(err, null);
-				}
-				else {
-					console.log(results);
-					callback(null, results);
-				}
-			});
+		} else {
+			console.log(results);
+			callback(null, results);
 		}
 	});
 }
 
-function deleteUser(restaurantUserId, callback) {
-	let sqlDeleteUser = "DELETE FROM restaurant WHERE restaurant_id = :userID";
-	let params = {
-		userID: restaurantUserId
-	};
-	console.log(sqlDeleteUser);
-	database.query(sqlDeleteUser, params, (err, results, fields) => {
+
+function getAllReviews(callback) {
+	let sqlQuery = "SELECT review_id, restaurant_id, reviewer_name, details, rating FROM review";
+	database.query(sqlQuery, (err, results, fields) => {
 		if (err) {
 			callback(err, null);
 		}
@@ -79,4 +63,43 @@ function deleteUser(restaurantUserId, callback) {
 	});
 }
 
-module.exports = { getAllRestaurant, getAllreviews, deleteUser, addUser }
+
+function deleteReview(review_id, callback) {
+	let sqlDeleteReview = "DELETE FROM review WHERE review_id = :review_id";
+	let params = {
+		review_id: review_id
+	};
+	console.log(sqlDeleteReview);
+	database.query(sqlDeleteReview, params, (err, results, fields) => {
+		if (err) {
+			callback(err, null);
+		}
+		else {
+			console.log(results);
+			callback(null, results);
+		}
+	});
+}
+
+function addReview(postData, callback) { 
+	let sqlInsertSalt = "INSERT INTO review (restaurant_id, reviewer_name, details, rating) VALUES (:restaurant_id, :reviewer_name, :details, :rating);"
+	let params = {
+		restaurant_id: postData.restaurant_id,
+		reviewer_name: postData.name,
+		details: postData.details,
+		rating: postData.rating,
+	};
+	console.log(sqlInsertSalt);
+	database.query(sqlInsertSalt, params, (err, results, fields) => {
+		if (err) {
+			console.log(err);
+			callback(err, null);
+		} else {
+			console.log(results);
+			callback(null, results);
+		}
+	});
+}
+
+
+module.exports = { getAllRestaurants, deleteRestaurant, addRestaurant, getAllReviews, deleteReview, addReview }
